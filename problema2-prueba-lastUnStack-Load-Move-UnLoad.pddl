@@ -24,30 +24,32 @@
         (= (battery-max rm1) 25)
         (= (recharge-duration rm1) 5)
         (= (velocity rm1) 2)
+        (robot-free rm1)
 
         (robot-at rm2 B)
         (= (battery rm2) 20)
         (= (battery-max rm2) 40)
         (= (recharge-duration rm2) 6)
         (= (velocity rm2) 4)
+        (robot-free rm2)
 
         (robot-at rm3 B)
         (= (battery rm3) 25)
         (= (battery-max rm3) 50)
         (= (recharge-duration rm3) 8)
         (= (velocity rm3) 4)
+        (robot-free rm3)
 
         (robot-at rgA A)
-        (robot-at rgB B)
-        (robot-at rgC C)
-        (robot-at rgD D)
-
-        (robot-free rm1)
-        (robot-free rm2)
-        (robot-free rm3)
         (robot-free rgA)
+
+        (robot-at rgB B)
         (robot-free rgB)
+
+        (robot-at rgC C)
         (robot-free rgC)
+
+        (robot-at rgD D)
         (robot-free rgD)
 
         (pile-empty rgD)
@@ -93,25 +95,9 @@
     )
     (:goal
         (and
-            (box-at b1 C)
-            (box-at b2 B)
-            (box-at b3 D)
-            (box-at b4 B)
-            (box-at b5 D)
-            (box-free b1)
-            (box-free b4)
-            (box-free b5)
-            (on b4 b2)
-            (on b2 rgB)
-            (on b5 b3)
-            (on b3 rgD)
-
-            (robot-at rm1 D)
-            (robot-at rgA A)
-            (robot-at rgB B)
-            (robot-at rgC C)
-            (robot-at rgD D)
-
+            (box-at b2 D)
+            (on b2 rgD)
+            (box-on-pile b2 rgD)
         )
     )
 
