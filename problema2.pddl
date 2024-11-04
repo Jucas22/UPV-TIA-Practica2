@@ -105,6 +105,7 @@
             (on b2 rgB)
             (on b5 b3)
             (on b3 rgD)
+            (on b1 rgC)
 
             (robot-at rm1 D)
             (robot-at rgA A)
