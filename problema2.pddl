@@ -5,10 +5,11 @@
         rgB - rg
         rgC - rg
         rgD - rg
-        tA - table
-        tB - table
-        tC - table
-        tD - table
+        table - table
+        pA - pile
+        pB - pile
+        pC - pile
+        pD - pile
         A - position
         B - position
         C - position
@@ -54,6 +55,14 @@
         (robot-free rgC)
         (robot-free rgD)
 
+        (pile-empty pD)
+
+        (box-on-pile b1)
+        (box-on-pile b2)
+        (box-on-pile b3)
+        (box-on-pile b4)
+        (box-on-pile b5)
+
         (box-at b1 B)
         (box-at b2 A)
         (box-at b3 C)
@@ -63,9 +72,9 @@
         (box-free b1)
         (box-free b2)
         (box-free b5)
-        (on b1 tB)
-        (on b2 tA)
-        (on b3 tC)
+        (on b1 pB)
+        (on b2 pA)
+        (on b3 pC)
         (on b4 b3)
         (on b5 b4)
 

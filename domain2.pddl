@@ -1,7 +1,7 @@
 (define (domain robots2)
     (:requirements :durative-actions :typing :fluents)
     (:types
-        rg rm box position table - object
+        rg rm box position table pile - object
 
     )
     (:predicates
@@ -13,8 +13,9 @@
         (box-at ?b - box ?p - position) ;la caja está en la posición X
         (box-free ?b - box) ;la caja no tiene ninguna caja encima
         (on ?b1 - box ?place -
-            (either box rm table)) ;la baja x esta encima de la caja y,  o del robot movil Z, o encima de la mesa de la pos A
+            (either box rm table pile)) ;la baja x esta encima de la caja y,  o del robot movil Z, o encima de la mesa de la pos A
         (box-on-pile ?b - box)
+        (pile-empty ?pile - pile)
 
         (charging-point ?p - position) ;hay un punto de carga en la posicion
         (charging-point-free ?p - position) ;está libre el punto de carga?
@@ -35,18 +36,40 @@
         :condition (and
             ;La caja 1 tiene que estar en la posición de la grua, en la mesa y libre
             (at start (box-at ?b1 ?pos)) (at start (box-free ?b1)) (at start (on ?b1 ?table))
-            ;la caja 2 tiene que estar en la posicion de la grua, y libre
-            (at start (box-at ?b2 ?pos)) (at start (box-free ?b2))
+            ;la caja 2 tiene que estar en la posicion de la grua, en la pila y libre
+            (at start (box-at ?b2 ?pos)) (at start (box-free ?b2)) (at start (box-on-pile ?b2))
             ;la grua tiene que estar en la posicion y libre
             (at start (robot-at ?r ?pos)) (at start (robot-free ?r))
         )
         :effect (and
             ;cuando empieza el robot grua esta ocupado y cuando termina se libera
             (at start (not (robot-free ?r))) (at end (robot-free ?r))
-            ;cuando termina la caja 1 está encima de b2 y no en la mesa
-            (at start (not (on ?b1 ?table))) (at end (on ?b1 ?b2))
+            ;cuando termina la caja 1 está encima de b2, en la pila y no en la mesa
+            (at start (not (on ?b1 ?table))) (at end (on ?b1 ?b2)) (at end (box-on-pile ?b1))
             ;cuando termina la caja 2 ya no está libre
             (at end (not (box-free ?b2)))
+            (at end (increase (time-total) 2))
+        )
+    )
+
+    (:durative-action first-stack
+        :parameters ( ?r - rg ?b - box ?p - pile ?pos - position ?table - table)
+        :duration (= ?duration 2)
+        :condition (and
+            ;La caja 1 tiene que estar en la posición de la grua, en la mesa y libre
+            (at start (box-at ?b ?pos)) (at start (box-free ?b)) (at start (on ?b ?table))
+            ;la pila debe estar vacía
+            (at start (pile-empty ?p))
+            ;la grua tiene que estar en la posicion y libre
+            (at start (robot-at ?r ?pos)) (at start (robot-free ?r))
+        )
+        :effect (and
+            ;cuando empieza el robot grua esta ocupado y cuando termina se libera
+            (at start (not (robot-free ?r))) (at end (robot-free ?r))
+            ;cuando termina la caja 1 está en la pila
+            (at start (not (on ?b ?table))) (at end (on ?b ?p)) (at end (box-on-pile ?b))
+            ;cuando termina la pila no está vacía
+            (at end (not (pile-empty ?p)))
             (at end (increase (time-total) 2))
         )
     )
@@ -55,21 +78,40 @@
         :parameters ( ?r - rg ?b1 ?b2 - box ?pos - position ?table - table)
         :duration (= ?duration 2)
         :condition (and
-            ;La caja 1 tiene que estar en la posición de la grua, encima de la caja 2 y libre
-            (at start (box-at ?b1 ?pos)) (at start (box-free ?b1)) (at start (on ?b1 ?b2))
+            ;La caja 1 tiene que estar en la posición de la grua, encima de la caja 2, en la pila y libre
+            (at start (box-at ?b1 ?pos)) (at start (box-free ?b1)) (at start (on ?b1 ?b2)) (at start(box-on-pile ?b1))
             ;la caja 2 tiene que estar en la posicion de la grua
-            (at start (box-at ?b2 ?pos))
+            (at start (box-at ?b2 ?pos)) (at start(box-on-pile ?b2))
             ;la grua tiene que estar en la posicion y libre
             (at start (robot-at ?r ?pos)) (at start (robot-free ?r))
         )
         :effect (and
             ;cuando empieza el robot grua esta ocupado y cuando termina se libera
             (at start (not (robot-free ?r))) (at end (robot-free ?r))
-            ;cuando termina la caja 1 está en la mesa y no encima de b2
-            (at start (not (on ?b1 ?b2))) (at end (on ?b1 ?table))
+            ;cuando termina la caja 1 está en la mesa, y no encima de b2 y no esta en la pila 
+            (at start (not (on ?b1 ?b2))) (at end (on ?b1 ?table)) (at end (not (box-on-pile ?b1)))
             ;cuando termina la caja 2 está libre
             (at end (box-free ?b2))
             (at end (increase (time-total) 2))
+        )
+    )
+
+    (:durative-action last-un-stack
+        :parameters ( ?r - rg ?b - box ?p - pile ?pos - position ?table - table)
+        :duration (= ?duration 2)
+        :condition (and
+            ;La caja 1 tiene que estar en la posición de la grua, en la pila y libre
+            (at start (box-at ?b ?pos)) (at start (box-free ?b)) (at start (on ?b ?p)) (at start(box-on-pile ?b))
+            ;la grua tiene que estar en la posicion y libre
+            (at start (robot-at ?r ?pos)) (at start (robot-free ?r))
+        )
+        :effect (and
+            ;cuando empieza el robot grua esta ocupado y cuando termina se libera
+            (at start (not (robot-free ?r))) (at end (robot-free ?r))
+            ;cuando termina la caja 1 está en la mesa, y no encima de la pila y no esta en la pila 
+            (at start (not (on ?b ?p))) (at end (on ?b ?table)) (at end (not (box-on-pile ?b)))
+            ;la pila está libre
+            (at end (pile-empty ?p))
         )
     )
 
