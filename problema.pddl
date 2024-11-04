@@ -1,5 +1,5 @@
 (define (problem robots_pract)
-    (:domain robots)
+    (:domain robots2)
     (:objects
         rgA - rg
         rgB - rg
@@ -50,6 +50,13 @@
         (robot-free rgC)
         (robot-free rgD)
 
+        (pile-empty rgD)
+        (box-on-pile b1 rgB)
+        (box-on-pile b2 rgA)
+        (box-on-pile b3 rgC)
+        (box-on-pile b4 rgC)
+        (box-on-pile b5 rgC)
+
         (box-at b1 B)
         (box-at b2 A)
         (box-at b3 C)
@@ -59,13 +66,16 @@
         (box-free b1)
         (box-free b2)
         (box-free b5)
-        (on b5 b4)
+        (on b1 rgB)
+        (on b2 rgA)
+        (on b3 rgC)
         (on b4 b3)
+        (on b5 b4)
 
-        (charging_point A)
-        (charging_point B)
-        (charging_point_status A)
-        (charging_point_status B)
+        (charging-point A)
+        (charging-point B)
+        (charging-point-free A)
+        (charging-point-free B)
 
         (= (distance A B) 15)
         (= (distance A C) 18)
@@ -92,7 +102,10 @@
             (box-free b4)
             (box-free b5)
             (on b4 b2)
+            (on b2 rgB)
             (on b5 b3)
+            (on b3 rgD)
+            (on b1 rgC)
 
             (robot-at rm1 D)
             (robot-at rgA A)
