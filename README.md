@@ -12,6 +12,7 @@ Para ejecutar la práctica, es necesario tener el archivo `lpg-td.exe` descargad
 
 ```bash
 ./lpg-td.exe -o ..\Practica_2\domain2.pddl -f ..\Practica_2\problema2.pddl -inst_with_contraddicting_objects -n 1
+```
 
 Enunciado: Gestión inteligente de una flota de robots de almacén logístico
 Utilizando técnicas de planificación inteligente, el objetivo es gestionar y automatizar una flota de robots autónomos en un almacén logístico. Los robots deben ser autosuficientes para realizar las siguientes tareas:
