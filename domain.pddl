@@ -199,6 +199,7 @@
         )
 
     )
+
     (:durative-action move-robot-package
         :parameters (?r - rm ?from ?to - position ?b - box)
         :duration (= ?duration (/ (distance ?from ?to) (velocity ?r)))

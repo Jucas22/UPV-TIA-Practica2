@@ -14,53 +14,73 @@ Para ejecutar la práctica, es necesario tener el archivo `lpg-td.exe` descargad
 ./lpg-td.exe -o ..\Practica_2\domain2.pddl -f ..\Practica_2\problema2.pddl -inst_with_contraddicting_objects -n 1
 ```
 
-Enunciado: Gestión inteligente de una flota de robots de almacén logístico
+# Gestión inteligente de una flota de robots de almacén logístico
+
+## Enunciado
 Utilizando técnicas de planificación inteligente, el objetivo es gestionar y automatizar una flota de robots autónomos en un almacén logístico. Los robots deben ser autosuficientes para realizar las siguientes tareas:
 
-Apilar y desapilar paquetes de las estanterías.
-Transportar paquetes.
-Controlar las necesidades de carga de su propia batería.
-Características del sistema
-Tipos de robots:
+- Apilar y desapilar paquetes de las estanterías.
+- Transportar paquetes.
+- Controlar las necesidades de carga de su propia batería.
 
-Robots grúa: Manipulan paquetes (apilan y desapilan) y cargan/descargan paquetes en los robots móviles. Son fijos y están conectados a una fuente de alimentación.
-Robots móviles: Transportan paquetes entre posiciones y funcionan con batería que debe recargarse en puntos específicos.
-Restricciones de manipulación:
+## Características del sistema
 
-Un robot (de cualquier tipo) solo puede manejar un paquete a la vez.
-No se permite que haya paquetes en el suelo; solo pueden estar apilados o manipulados por un robot.
-Carga de batería:
+### Tipos de robots
 
-Los robots móviles necesitan recargarse en puntos limitados que solo pueden cargar un robot a la vez.
-Un robot móvil debe estar sin paquetes para recargarse.
-Modo de pruebas:
+- **Robots grúa**: Manipulan paquetes (apilan y desapilan) y cargan/descargan paquetes en los robots móviles. Son fijos y están conectados a una fuente de alimentación.
+- **Robots móviles**: Transportan paquetes entre posiciones y funcionan con batería que debe recargarse en puntos específicos.
+
+### Restricciones de manipulación
+
+- Un robot (de cualquier tipo) solo puede manejar un paquete a la vez.
+- No se permite que haya paquetes en el suelo; solo pueden estar apilados o manipulados por un robot.
+
+### Carga de batería
+
+- Los robots móviles necesitan recargarse en puntos limitados que solo pueden cargar un robot a la vez.
+- Un robot móvil debe estar sin paquetes para recargarse.
+
+### Modo de pruebas
 
 Actualmente, el número de robots es limitado, pero se espera que aumente en el futuro para automatizar completamente el almacén.
-Distancias:
 
-Especificadas en el archivo problema.pddl.
-Acciones a planificar
-Acciones con robots grúa
-Apilar: Un robot grúa coloca un paquete paquete1 sobre otro paquete paquete2 en la mesa de trabajo. Ambos paquetes deben estar libres.
-Desapilar: Un robot grúa retira un paquete paquete1 de encima de otro paquete paquete2 y lo coloca sobre la mesa de trabajo. Ambos paquetes quedan libres después de esta acción.
-Acciones con robots móviles
-Moverse: Un robot móvil se desplaza entre dos posiciones con o sin paquete. Solo puede moverse si la carga de su batería es suficiente para cubrir la distancia entre origen y destino. La carga disminuye proporcionalmente a la distancia recorrida.
-Cargar/descargar paquetes
-Cargar: Un robot grúa coloca un paquete de la mesa de trabajo sobre un robot móvil. Todos los objetos involucrados deben estar libres y en la misma posición.
-Descargar: Un robot móvil deja un paquete en la mesa de trabajo de un robot grúa. El paquete queda libre tras esta acción.
-Recargar batería
-Un robot móvil se recarga en un punto específico. Esto solo puede realizarse cuando no lleva paquetes y el cargador está disponible. La recarga lleva un tiempo determinado e independiente del nivel inicial de la batería.
-Duración de las acciones
-Apilar/desapilar/cargar/descargar: 2 unidades de tiempo.
-Mover: La duración es la distancia entre origen y destino dividida por la velocidad del robot.
-Recargar batería: Varía según el robot y debe ser modelada.
-Optimización del plan
+### Distancias
+
+- Especificadas en el archivo `problema.pddl`.
+
+## Acciones a planificar
+
+### Acciones con robots grúa
+
+1. **Apilar**: Un robot grúa coloca un paquete `paquete1` sobre otro paquete `paquete2` en la mesa de trabajo. Ambos paquetes deben estar libres.
+2. **Desapilar**: Un robot grúa retira un paquete `paquete1` de encima de otro paquete `paquete2` y lo coloca sobre la mesa de trabajo. Ambos paquetes quedan libres después de esta acción.
+
+### Acciones con robots móviles
+
+1. **Moverse**: Un robot móvil se desplaza entre dos posiciones con o sin paquete. Solo puede moverse si la carga de su batería es suficiente para cubrir la distancia entre origen y destino. La carga disminuye proporcionalmente a la distancia recorrida.
+2. **Cargar/descargar paquetes**
+   - **Cargar**: Un robot grúa coloca un paquete de la mesa de trabajo sobre un robot móvil. Todos los objetos involucrados deben estar libres y en la misma posición.
+   - **Descargar**: Un robot móvil deja un paquete en la mesa de trabajo de un robot grúa. El paquete queda libre tras esta acción.
+3. **Recargar batería**: Un robot móvil se recarga en un punto específico. Esto solo puede realizarse cuando no lleva paquetes y el cargador está disponible. La recarga lleva un tiempo determinado e independiente del nivel inicial de la batería.
+
+## Duración de las acciones
+
+- **Apilar/desapilar/cargar/descargar**: 2 unidades de tiempo.
+- **Mover**: La duración es la distancia entre origen y destino dividida por la velocidad del robot.
+- **Recargar batería**: Varía según el robot y debe ser modelada.
+
+## Optimización del plan
+
 Queremos minimizar:
 
-La duración total del plan.
-El número total de recargas realizadas.
-La métrica para evaluar la calidad del plan es:
+- La duración total del plan.
+- El número total de recargas realizadas.
 
-lisp
+### Métrica para evaluar la calidad del plan
+
+```lisp
 (:metric minimize (+ (* 0.7 (total-time)) (* 10 (numero-recargas))))
-Nota: La carga máxima, velocidad de carga y velocidad de movimiento de los robots están especificadas en el archivo problema.pddl.
+```
+
+### Nota
+La carga máxima, velocidad de carga y velocidad de movimiento de los robots están especificadas en el archivo `problema.pddl`.
