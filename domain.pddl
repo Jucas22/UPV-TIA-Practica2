@@ -14,8 +14,8 @@
         (box-free ?b - box) ;la caja no tiene ninguna caja encima
         (on ?b1 - box ?place -
             (either box rm rg)) ;la baja x esta encima de la caja y,  o del robot movil Z, o encima de la mesa de la pos A
-        (box-on-pile ?b - box ?r - rg)
-        (box-on-table ?b - box ?r - rg)
+        (box-on-pile ?b - box ?r - rg) ;la caja está en la pila de rg
+        (box-on-table ?b - box ?r - rg) ;la caja está en la mesa de rg
         (pile-empty ?r - rg)
 
         (charging-point ?p - position) ;hay un punto de carga en la posicion
